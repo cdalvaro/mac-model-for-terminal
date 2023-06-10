@@ -31,7 +31,7 @@ jobs:
           mkdir -p Products
           cp -v .build/${{ matrix.arch }}-apple-macosx/release/${{ env.PACKAGE_NAME}} Products/${{ env.PACKAGE_NAME}}-${{ matrix.arch }}
       - name: Upload artifact ${{ matrix.arch }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ env.PACKAGE_NAME }}-${{ matrix.arch }}
           path: Products/
@@ -41,10 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: ${{ env.PACKAGE_NAME }}-*
-          path: Products
+        uses: actions/download-artifact@v3
       - name: Create Release
         uses: marvinpinto/action-automatic-releases@latest
         with:
