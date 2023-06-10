@@ -35,6 +35,7 @@ jobs:
         with:
           name: ${{ env.PACKAGE_NAME }}-${{ matrix.arch }}
           path: Products/
+
   deploy:
     name: Deploy to GitHub Releases
     needs: build
@@ -44,15 +45,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           path: Products
-      - name: Debug
-        run: |
-          echo 'ls -l'
-          ls -l
-
-          echo 'ls -l Products/'
-          ls -l Products
-
-          [[ which tree 2>&1 > /dev/null ]] && tree
       - name: Create Release
         uses: marvinpinto/action-automatic-releases@latest
         with:
@@ -61,4 +53,4 @@ jobs:
           prerelease: false
           title: "Mac Model for Terminal"
           files: |
-            Products/${{ env.PACKAGE_NAME}}-*
+            Products/*
