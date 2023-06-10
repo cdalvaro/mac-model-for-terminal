@@ -1,0 +1,56 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  PACKAGE_NAME: mac-model-for-terminal
+
+jobs:
+  build:
+    name: Build targets
+    strategy:
+      matrix:
+        arch: [x86_64, arm64]
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          path: .build/${{ matrix.arch }}-apple-macosx
+          key: build-${{ matrix.arch }}-${{ hashFiles('Package.swift') }}
+          restore-keys: |
+            build-${{ matrix.arch }}-
+            build-
+      - name: Build for ${{ matrix.arch }}
+        run: swift build --configuration release --arch ${{ matrix.arch }} -v
+      - name: Prepare products
+        run: |
+          mkdir -p Products
+          cp -v .build/${{ matrix.arch }}-apple-macosx/release/${{ env.PACKAGE_NAME}} Products/${{ env.PACKAGE_NAME}}-${{ matrix.arch }}
+      - name: Upload artifact ${{ matrix.arch }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.PACKAGE_NAME }}-${{ matrix.arch }}
+          path: Products/
+  deploy:
+    name: Deploy to GitHub Releases
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ env.PACKAGE_NAME }}-*
+          path: Products
+      - name: Create Release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: false
+          title: "Mac Model for Terminal"
+          files: |
+            Products/${{ env.PACKAGE_NAME}}-*
