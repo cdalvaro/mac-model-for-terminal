@@ -44,6 +44,15 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           path: Products
+      - name: Debug
+        run: |
+          echo 'ls -l'
+          ls -l
+
+          echo 'ls -l Products/'
+          ls -l Products
+
+          [[ which tree 2>&1 > /dev/null ]] && tree
       - name: Create Release
         uses: marvinpinto/action-automatic-releases@latest
         with:
