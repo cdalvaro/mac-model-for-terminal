@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "mac-model-for-terminal",
     platforms: [
-        .macOS(.v12),
+        .macOS(.v12)
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -17,9 +17,11 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .executableTarget(
             name: "mac-model-for-terminal",
-            dependencies: []),
+            dependencies: []
+        ),
         .testTarget(
             name: "mac-model-for-terminalTests",
-            dependencies: ["mac-model-for-terminal"]),
+            dependencies: ["mac-model-for-terminal"]
+        )
     ]
 )
