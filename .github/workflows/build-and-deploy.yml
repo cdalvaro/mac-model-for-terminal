@@ -45,6 +45,12 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           path: Products
+      - name: Check files
+        run: |
+          ls -l Products
+          ls -l Products/*
+          sudo apt-get install -y tree
+          tree
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
