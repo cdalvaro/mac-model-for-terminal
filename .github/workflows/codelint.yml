@@ -1,0 +1,20 @@
+name: Lint code
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/codelint.yml'
+      - '.swiftlint.yml'
+      - 'Sources/**/*.swift'
+
+jobs:
+  SwiftLint:
+    name: SwiftLint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Lint code using SwiftLint
+        uses: norio-nomura/action-swiftlint@3.2.1
+        env:
+          WORKING_DIRECTORY: Sources
