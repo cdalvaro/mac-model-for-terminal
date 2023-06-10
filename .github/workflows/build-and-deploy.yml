@@ -28,13 +28,13 @@ jobs:
         run: swift build --configuration release --arch ${{ matrix.arch }} -v
       - name: Prepare products
         run: |
-          mkdir -p Products
-          cp -v .build/${{ matrix.arch }}-apple-macosx/release/${{ env.PACKAGE_NAME}} Products/${{ env.PACKAGE_NAME}}-${{ matrix.arch }}
+          mkdir -p products
+          cp -v .build/${{ matrix.arch }}-apple-macosx/release/${{ env.PACKAGE_NAME}} products/${{ env.PACKAGE_NAME}}-${{ matrix.arch }}
       - name: Upload artifact ${{ matrix.arch }}
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.PACKAGE_NAME }}-${{ matrix.arch }}
-          path: Products/
+          path: products/
 
   deploy:
     name: Deploy to GitHub Releases
@@ -44,13 +44,11 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v3
         with:
-          path: Products
-      - name: Check files
+          path: products
+      - name: Prepare release files
         run: |
-          ls -l Products
-          ls -l Products/*
-          sudo apt-get install -y tree
-          tree
+          mkdir -p release_files
+          find products -type f -exec cp -v {} release_files/ \;
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
@@ -59,4 +57,4 @@ jobs:
           name: "Mac Model for Terminal"
           fail_on_unmatched_files: true
           files: |
-            Products/*
+            release_files/*
