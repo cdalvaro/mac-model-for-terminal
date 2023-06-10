@@ -1,0 +1,41 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  PACKAGE_NAME: mac-model-for-terminal
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build package
+        run: swift build -v
+
+      - name: Run tests
+        run: swift test --enable-code-coverage -v
+
+      - name: Generate coverage report
+        run: |
+          xcrun llvm-cov export -format="lcov" \
+            .build/debug/${PACKAGE_NAME}PackageTests.xctest/Contents/MacOS/${PACKAGE_NAME}PackageTests \
+            -instr-profile .build/debug/codecov/default.profdata > coverage_report.lcov
+
+      - name: Upload coverage report
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage_report.lcov
+          fail_ci_if_error: true
+          swift: true
+          verbose: true
