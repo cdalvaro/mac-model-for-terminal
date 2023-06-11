@@ -23,7 +23,7 @@ final class MacModelForTerminalTests: XCTestCase {
     func testMacPro() throws {
         let macModelMock = MacModelMock(macModel: "MacPro6,1")
         let macModelForTerminal = MacModelForTerminal(macModel: macModelMock)
-        XCTAssertEqual(macModelForTerminal.symbol, "􀦱 Mac Pro")
+        XCTAssertEqual(macModelForTerminal.symbol, "􀦱  Mac Pro")
     }
 
     func testMacStudio() throws {

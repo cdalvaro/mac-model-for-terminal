@@ -18,7 +18,7 @@ public struct MacModelForTerminal {
         case "MacBookPro17,1":
             symbol = "􀟛  MacBook"
         case "MacPro6,1":
-            symbol = "􀦱 Mac Pro"
+            symbol = "􀦱  Mac Pro"
         case "Mac13,2":
             symbol = "􁏍  Mac Studio"
         default:
